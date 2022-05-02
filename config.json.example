@@ -3,7 +3,8 @@
     "BotToken": ""
   },
   "Mongo": {
-    "Uri": "mongodb://127.0.0.1"
+    "Uri": "mongodb://127.0.0.1",
+    "Database": "crocodile"
   },
   "Redis": {
     "Address": ":6379",

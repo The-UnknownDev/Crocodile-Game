@@ -12,6 +12,7 @@ var C = struct {
 	}
 	Mongo struct {
 		Uri string
+		Database string
 	}
 	Redis struct {
 		Address  string

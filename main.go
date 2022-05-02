@@ -5,6 +5,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 
 	"bot/config"
+	"bot/db"
 	"bot/game"
 	"bot/handlers"
 	"bot/redis"
@@ -19,6 +20,9 @@ func main() {
 		panic(err)
 	}
 	if err := redis.Initialize(); err != nil {
+		panic(err)
+	}
+	if err := db.Initialize(); err != nil {
 		panic(err)
 	}
 	bot, err := gotgbot.NewBot(config.C.Telegram.BotToken, nil)

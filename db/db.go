@@ -3,30 +3,22 @@ package db
 import (
 	"context"
 
-	"github.com/PaulSonOfLars/gotgbot/v2"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"bot/config"
 )
 
-var ctx = context.Background()
-var db *mongo.Database
-
-
-
-type User struct {
-	Id        int64  `bson:"id"`
-	Scores    int64  `bson:"scores,omitempty"`
-}
+var (
+	ctx      = context.Background()
+	database *mongo.Database
+)
 
 func Initialize() error {
-	client, err := mongo.Connect(ctx)
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.C.Mongo.Uri))
 	if err != nil {
 		return err
 	}
-	db = client.Database("crocodilegame")
-	return nil
-}
-
-func Score(user *gotgbot.User) {
-	db.Collection("j").UpdateOne(ctx, bson.D{{"id", user.Id}}, bson.D{{"$inc", bson.D{{"scores", 1}}}})
+	database = client.Database(config.C.Mongo.Database)
+	return usersInitialize()
 }
