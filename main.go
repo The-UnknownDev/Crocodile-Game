@@ -1,29 +1,27 @@
 package main
 
 import (
-	"os"
-
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
-	"github.com/joho/godotenv"
 
+	"bot/config"
 	"bot/game"
 	"bot/handlers"
+	"bot/redis"
 	"bot/wordlist"
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
+	if err := config.Load(); err != nil {
 		panic(err)
 	}
 	if err := wordlist.Initialize(); err != nil {
 		panic(err)
 	}
-	if err := game.Initialize(); err != nil {
+	if err := redis.Initialize(); err != nil {
 		panic(err)
 	}
-	token := os.Getenv("BOT_TOKEN")
-	bot, err := gotgbot.NewBot(token, nil)
+	bot, err := gotgbot.NewBot(config.C.Telegram.BotToken, nil)
 	if err != nil {
 		panic(err)
 	}

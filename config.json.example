@@ -1,0 +1,14 @@
+{
+  "Telegram": {
+    "BotToken": ""
+  },
+  "Mongo": {
+    "Uri": "mongodb://127.0.0.1"
+  },
+  "Redis": {
+    "Address": ":6379",
+    "Username": "",
+    "Password": "",
+    "Database": 0
+  }
+}
