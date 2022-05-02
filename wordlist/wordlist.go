@@ -18,7 +18,24 @@ func Initialize() error {
 	return nil
 }
 
-func Next() string {
-	i := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(words))
-	return words[i]
+func Get(index int) string {
+	return words[index]
+}
+
+func Rand() int {
+	return rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(words))
+}
+
+func Prev(index int) int {
+	if index != 0 {
+		index--
+	}
+	return index
+}
+
+func Next(index int) int {
+	if len(words) > index+1 {
+		index++
+	}
+	return index
 }

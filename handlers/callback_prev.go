@@ -9,14 +9,14 @@ import (
 	"bot/wordlist"
 )
 
-var callbackViewHandler = handlers.NewCallback(
+var callbackPrevHandler = handlers.NewCallback(
 	func(cq *gotgbot.CallbackQuery) bool {
-		return cq.Data == "view"
+		return cq.Data == "prev"
 	},
-	callbackView,
+	callbackPrev,
 )
 
-func callbackView(b *gotgbot.Bot, ctx *ext.Context) error {
+func callbackPrev(b *gotgbot.Bot, ctx *ext.Context) error {
 	game, err := game.Get(ctx.EffectiveChat.Id)
 	if err != nil {
 		return err
@@ -24,6 +24,10 @@ func callbackView(b *gotgbot.Bot, ctx *ext.Context) error {
 	if game.Host != ctx.EffectiveUser.Id {
 		_, err = ctx.CallbackQuery.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "This is not for you."})
 	} else {
+		game.Word = wordlist.Prev(game.Word)
+		if err = game.Set(); err != nil {
+			return err
+		}
 		_, err = ctx.CallbackQuery.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: wordlist.Get(game.Word)})
 	}
 	return err

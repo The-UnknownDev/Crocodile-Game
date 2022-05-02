@@ -16,8 +16,8 @@ var client *redis.Client
 
 type Game struct {
 	Chat int64
-	Word string
 	Host int64
+	Word int
 }
 
 func Initialize() error {

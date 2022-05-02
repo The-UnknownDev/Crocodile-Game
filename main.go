@@ -22,7 +22,7 @@ func main() {
 	if err := game.Initialize(); err != nil {
 		panic(err)
 	}
-	token := os.Getenv(os.Getenv("BOT_TOKEN"))
+	token := os.Getenv("BOT_TOKEN")
 	bot, err := gotgbot.NewBot(token, nil)
 	if err != nil {
 		panic(err)

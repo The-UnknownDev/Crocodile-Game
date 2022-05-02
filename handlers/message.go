@@ -9,6 +9,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
 	"bot/game"
+	"bot/wordlist"
 )
 
 var messageHandler = handlers.NewMessage(
@@ -26,7 +27,7 @@ func message(b *gotgbot.Bot, ctx *ext.Context) error {
 	if ctx.EffectiveUser.Id == game.Host {
 		return err
 	}
-	if strings.Contains(strings.ToLower(ctx.EffectiveMessage.Text), game.Word) {
+	if strings.Contains(strings.ToLower(ctx.EffectiveMessage.Text), wordlist.Get(game.Word)) {
 		if _, err = game.Del(); err != nil {
 			return err
 		}

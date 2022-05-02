@@ -18,6 +18,7 @@ func Load(dp *ext.Dispatcher) {
 			},
 		),
 	)
+	dp.AddHandler(callbackPrevHandler)
 	dp.AddHandler(callbackNextHandler)
 	dp.AddHandler(callbackViewHandler)
 	dp.AddHandler(commandStartHandler)

@@ -19,14 +19,14 @@ func commandStart(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err = ctx.EffectiveMessage.Reply(b, "A game is already in progress.", nil)
 		return err
 	}
-	if err := (&game.Game{Chat: ctx.EffectiveChat.Id, Host: ctx.EffectiveUser.Id, Word: wordlist.Next()}).Set(); err != nil {
+	if err := (&game.Game{Chat: ctx.EffectiveChat.Id, Host: ctx.EffectiveUser.Id, Word: wordlist.Rand()}).Set(); err != nil {
 		return err
 	}
 	_, err := ctx.EffectiveMessage.Reply(
 		b,
 		fmt.Sprintf("%s talks about a word", ctx.EffectiveUser.FirstName),
 		&gotgbot.SendMessageOpts{
-			ReplyMarkup: new(keyboard.InlineKeyboard).Text("View", "view").Text("Next", "next").Build(),
+			ReplyMarkup: new(keyboard.InlineKeyboard).Text("View word", "view").Row().Text("Previous word", "prev").Text("Next word", "next").Build(),
 		},
 	)
 	return err
