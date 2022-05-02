@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"strings"
+	"time"
 )
 
 var words []string
@@ -18,5 +19,6 @@ func Initialize() error {
 }
 
 func Next() string {
-	return words[rand.Intn(len(words))]
+	i := rand.New(rand.NewSource(time.Now().UnixNano())).Intn(len(words))
+	return words[i]
 }
