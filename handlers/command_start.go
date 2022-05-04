@@ -27,13 +27,6 @@ func commandStart(b *gotgbot.Bot, ctx *ext.Context) error {
 	if err := db.ChatsUpdate(ctx.EffectiveChat); err != nil {
 		return err
 	}
-	_, err := ctx.EffectiveMessage.Reply(
-		b,
-		fmt.Sprintf("%s talks about a word.", utils.Mention(ctx.EffectiveUser.Id, ctx.EffectiveUser.FirstName)),
-		&gotgbot.SendMessageOpts{
-			ParseMode:   "HTML",
-			ReplyMarkup: new(keyboard.InlineKeyboard).Text("View word", "view").Row().Text("Previous word", "prev").Text("Next word", "next").Build(),
-		},
-	)
+	_, err := ctx.EffectiveMessage.Reply(b, fmt.Sprintf("%s talks about a word.", utils.Mention(ctx.EffectiveUser.Id, ctx.EffectiveUser.FirstName)), &gotgbot.SendMessageOpts{ParseMode: "HTML", ReplyMarkup: new(keyboard.InlineKeyboard).Text("View word", "view").Row().Text("Previous word", "prev").Text("Next word", "next").Build()})
 	return err
 }

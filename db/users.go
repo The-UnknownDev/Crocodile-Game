@@ -19,13 +19,7 @@ func users() *mongo.Collection {
 }
 
 func usersInitialize() error {
-	_, err := users().Indexes().CreateOne(
-		ctx,
-		mongo.IndexModel{
-			Keys:    bson.D{{"id", 1}},
-			Options: options.Index().SetUnique(true),
-		},
-	)
+	_, err := users().Indexes().CreateOne(ctx, mongo.IndexModel{Keys: bson.D{{"id", 1}}, Options: options.Index().SetUnique(true)})
 	return err
 }
 

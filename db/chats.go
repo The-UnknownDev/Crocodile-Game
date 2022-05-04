@@ -8,9 +8,9 @@ import (
 )
 
 type Chat struct {
-	Id    int64 `bson:"id"`
-	Title int64 `bson:"title"`
-	Games int64 `bson:"games"`
+	Id       int64           `bson:"id"`
+	Title    int64           `bson:"title"`
+	Games    int64           `bson:"games"`
 	UserWins map[int64]int64 `bson:"user_wins"`
 }
 
@@ -19,13 +19,7 @@ func chats() *mongo.Collection {
 }
 
 func chatsInitialize() error {
-	_, err := chats().Indexes().CreateOne(
-		ctx,
-		mongo.IndexModel{
-			Keys:    bson.D{{"id", 1}},
-			Options: options.Index().SetUnique(true),
-		},
-	)
+	_, err := chats().Indexes().CreateOne(ctx, mongo.IndexModel{Keys: bson.D{{"id", 1}}, Options: options.Index().SetUnique(true)})
 	return err
 }
 

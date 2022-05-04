@@ -10,12 +10,7 @@ import (
 var client *redis.Client
 
 func Initialize() error {
-	client = redis.NewClient(&redis.Options{
-		Addr:     config.C.Redis.Address,
-		Username: config.C.Redis.Username,
-		Password: config.C.Redis.Password,
-		DB:       config.C.Redis.Database,
-	})
+	client = redis.NewClient(&redis.Options{Addr: config.C.Redis.Address, Username: config.C.Redis.Username, Password: config.C.Redis.Password, DB: config.C.Redis.Database})
 	_, err := client.Ping(client.Context()).Result()
 	return err
 }

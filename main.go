@@ -31,11 +31,7 @@ func main() {
 	session.Poll(bot)
 	updater := ext.NewUpdater(nil)
 	handlers.Load(updater.Dispatcher)
-	if err = updater.StartPolling(
-		bot, &ext.PollingOpts{
-			DropPendingUpdates: true,
-		},
-	); err != nil {
+	if err = updater.StartPolling(bot, &ext.PollingOpts{DropPendingUpdates: true}); err != nil {
 		panic(err)
 	}
 	updater.Idle()

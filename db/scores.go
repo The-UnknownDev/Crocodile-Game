@@ -17,13 +17,7 @@ func scores() *mongo.Collection {
 }
 
 func scoresInitialize() error {
-	_, err := scores().Indexes().CreateOne(
-		ctx,
-		mongo.IndexModel{
-			Keys:    bson.D{{"chat_id", 1}, {"user_id", 1}},
-			Options: options.Index().SetUnique(true),
-		},
-	)
+	_, err := scores().Indexes().CreateOne(ctx, mongo.IndexModel{Keys: bson.D{{"chat_id", 1}, {"user_id", 1}}, Options: options.Index().SetUnique(true)})
 	return err
 }
 

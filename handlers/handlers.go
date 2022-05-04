@@ -7,16 +7,7 @@ import (
 )
 
 func Load(dp *ext.Dispatcher) {
-	dp.AddHandler(
-		handlers.NewMessage(
-			func(msg *gotgbot.Message) bool {
-				return msg.Chat.Type != "supergroup"
-			},
-			func(b *gotgbot.Bot, ctx *ext.Context) error {
-				return ext.EndGroups
-			},
-		),
-	)
+	dp.AddHandler(handlers.NewMessage(func(msg *gotgbot.Message) bool { return msg.Chat.Type != "supergroup" }, func(b *gotgbot.Bot, ctx *ext.Context) error { return ext.EndGroups }))
 	dp.AddHandler(callbackPrevHandler)
 	dp.AddHandler(callbackNextHandler)
 	dp.AddHandler(callbackViewHandler)
