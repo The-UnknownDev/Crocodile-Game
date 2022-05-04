@@ -7,11 +7,8 @@ import (
 )
 
 var C = struct {
-	Telegram struct {
-		BotToken string
-	}
 	Mongo struct {
-		Uri string
+		Uri      string
 		Database string
 	}
 	Redis struct {
@@ -19,6 +16,9 @@ var C = struct {
 		Username string
 		Password string
 		Database int
+	}
+	Telegram struct {
+		BotToken string
 	}
 }{}
 

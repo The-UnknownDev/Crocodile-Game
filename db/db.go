@@ -20,5 +20,11 @@ func Initialize() error {
 		return err
 	}
 	database = client.Database(config.C.Mongo.Database)
-	return usersInitialize()
+	if err = usersInitialize(); err != nil {
+		return err
+	}
+	if err = chatsInitialize(); err != nil {
+		return err
+	}
+	return scoresInitialize()
 }

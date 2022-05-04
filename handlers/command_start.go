@@ -8,18 +8,22 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 	"github.com/gotgbot/keyboard"
 
-	"bot/game"
+	"bot/db"
+	"bot/session"
 	"bot/wordlist"
 )
 
 var commandStartHandler = handlers.NewCommand("start", commandStart)
 
 func commandStart(b *gotgbot.Bot, ctx *ext.Context) error {
-	if _, err := game.Get(ctx.EffectiveChat.Id); err == nil {
+	if _, err := session.GameGet(ctx.EffectiveChat.Id); err == nil {
 		_, err = ctx.EffectiveMessage.Reply(b, "A game is already in progress.", nil)
 		return err
 	}
-	if err := (&game.Game{Chat: ctx.EffectiveChat.Id, Host: ctx.EffectiveUser.Id, Word: wordlist.Rand()}).Set(); err != nil {
+	if err := session.GameSet(ctx.EffectiveChat.Id, &session.Game{Host: ctx.EffectiveUser.Id, Word: wordlist.Rand()}); err != nil {
+		return err
+	}
+	if err := db.ChatsUpdate(ctx.EffectiveChat); err != nil {
 		return err
 	}
 	_, err := ctx.EffectiveMessage.Reply(

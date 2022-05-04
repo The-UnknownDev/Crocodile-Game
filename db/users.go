@@ -10,8 +10,8 @@ import (
 type User struct {
 	Id        int64  `bson:"id"`
 	FirstName string `bson:"first_name"`
+	LastName  string `bson:"last_name"`
 	Username  string `bson:"username"`
-	Scores    int64  `bson:"scores"`
 }
 
 func users() *mongo.Collection {
@@ -23,12 +23,18 @@ func usersInitialize() error {
 		ctx,
 		mongo.IndexModel{
 			Keys:    bson.D{{"id", 1}},
-			Options: options.Index().SetName("id").SetUnique(true),
+			Options: options.Index().SetUnique(true),
 		},
 	)
 	return err
 }
 
-func UsersUpdateUser(user *gotgbot.User) (*mongo.UpdateResult, error) {
-	return users().UpdateOne(ctx, bson.D{{"id", user.Id}}, bson.D{{"$set", bson.D{{"first_name", user.FirstName}, {"username", user.Username}}}, {"$inc", bson.D{{"scores", 1}}}}, options.Update().SetUpsert(true))
+func UsersUpdate(user *gotgbot.User) error {
+	_, err := users().UpdateOne(ctx, bson.D{{"id", user.Id}}, bson.D{{"$set", bson.D{{"first_name", user.FirstName}, {"last_name", user.LastName}, {"username", user.Username}}}}, options.Update().SetUpsert(true))
+	return err
+}
+
+func UsersFind(id int64) (*User, error) {
+	user := &User{}
+	return user, users().FindOne(ctx, bson.D{{"id", id}}).Decode(user)
 }

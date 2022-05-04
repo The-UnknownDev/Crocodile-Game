@@ -6,9 +6,8 @@ import (
 
 	"bot/config"
 	"bot/db"
-	"bot/game"
 	"bot/handlers"
-	"bot/redis"
+	"bot/session"
 	"bot/wordlist"
 )
 
@@ -19,7 +18,7 @@ func main() {
 	if err := wordlist.Initialize(); err != nil {
 		panic(err)
 	}
-	if err := redis.Initialize(); err != nil {
+	if err := session.Initialize(); err != nil {
 		panic(err)
 	}
 	if err := db.Initialize(); err != nil {
@@ -29,7 +28,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	game.Poll(bot)
+	session.Poll(bot)
 	updater := ext.NewUpdater(nil)
 	handlers.Load(updater.Dispatcher)
 	if err = updater.StartPolling(

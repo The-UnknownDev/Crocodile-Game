@@ -5,7 +5,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
-	"bot/game"
+	"bot/session"
 	"bot/wordlist"
 )
 
@@ -17,7 +17,7 @@ var callbackPrevHandler = handlers.NewCallback(
 )
 
 func callbackPrev(b *gotgbot.Bot, ctx *ext.Context) error {
-	game, err := game.Get(ctx.EffectiveChat.Id)
+	game, err := session.GameGet(ctx.EffectiveChat.Id)
 	if err != nil {
 		return err
 	}
@@ -25,7 +25,7 @@ func callbackPrev(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err = ctx.CallbackQuery.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "This is not for you."})
 	} else {
 		game.Word = wordlist.Prev(game.Word)
-		if err = game.Set(); err != nil {
+		if err = session.GameSet(ctx.EffectiveChat.Id, game); err != nil {
 			return err
 		}
 		_, err = ctx.CallbackQuery.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: wordlist.Get(game.Word)})

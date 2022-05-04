@@ -5,7 +5,7 @@ import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
 
-	"bot/game"
+	"bot/session"
 	"bot/wordlist"
 )
 
@@ -17,7 +17,7 @@ var callbackViewHandler = handlers.NewCallback(
 )
 
 func callbackView(b *gotgbot.Bot, ctx *ext.Context) error {
-	game, err := game.Get(ctx.EffectiveChat.Id)
+	game, err := session.GameGet(ctx.EffectiveChat.Id)
 	if err != nil {
 		return err
 	}

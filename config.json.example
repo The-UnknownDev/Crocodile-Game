@@ -1,7 +1,4 @@
 {
-  "Telegram": {
-    "BotToken": ""
-  },
   "Mongo": {
     "Uri": "mongodb://127.0.0.1",
     "Database": "crocodile"
@@ -11,5 +8,8 @@
     "Username": "",
     "Password": "",
     "Database": 0
-  }
+  },
+  "Telegram": {
+    "BotToken": ""
+  },
 }
