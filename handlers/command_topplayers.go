@@ -16,9 +16,20 @@ import (
 var commandTopPlayersHandler = handlers.NewCommand("top_players", commandTopPlayers)
 
 func commandTopPlayers(b *gotgbot.Bot, ctx *ext.Context) error {
-	topPlayers, err := getTopPlayers(ctx.EffectiveChat.Id)
+	topPlayers, err := session.TopPlayersGet(ctx.EffectiveChat.Id)
 	if err != nil {
-		return err
+		scores, err := db.ScoresTop(ctx.EffectiveChat.Id)
+		if err != nil {
+			return err
+		}
+		topPlayers = []session.TopPlayer{}
+		for _, score := range scores {
+			user, _ := db.UsersFind(score.UserID)
+			topPlayers = append(topPlayers, session.TopPlayer{Id: score.UserID, Scores: score.Count, FirstName: user.FirstName, Username: user.Username})
+		}
+		if err = session.TopPlayersSet(ctx.EffectiveChat.Id, topPlayers); err != nil {
+			return err
+		}
 	}
 	text := "<b>The Top 5 Players in This Chat</b>\n\n"
 	for i, p := range topPlayers {
@@ -40,22 +51,4 @@ func commandTopPlayers(b *gotgbot.Bot, ctx *ext.Context) error {
 	text += "\n<i>Updates every 10 minutes.</i>"
 	_, err = ctx.EffectiveMessage.Reply(b, text, &gotgbot.SendMessageOpts{ParseMode: "HTML"})
 	return err
-}
-
-func getTopPlayers(id int64) ([]session.TopPlayer, error) {
-	topPlayers, err := session.TopPlayersGet(id)
-	if err == nil {
-		return topPlayers, nil
-	}
-	scores, err := db.ScoresTop(id)
-	if err != nil {
-		return nil, err
-	}
-	topPlayers = []session.TopPlayer{}
-	for _, score := range scores {
-		user, _ := db.UsersFind(score.UserID)
-		topPlayers = append(topPlayers, session.TopPlayer{Id: score.UserID, Scores: score.Count, FirstName: user.FirstName, Username: user.Username})
-	}
-	session.TopPlayersSet(id, topPlayers)
-	return topPlayers, nil
 }
