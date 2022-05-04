@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"fmt"
+	"html"
+	"strconv"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -18,16 +20,25 @@ func commandTopPlayers(b *gotgbot.Bot, ctx *ext.Context) error {
 	if err != nil {
 		return err
 	}
-	text := "The Top 5 Players in This Chat\n\n"
-	for i, player := range topPlayers {
-		name := player.FirstName
-		if player.Username != "" {
-			name = fmt.Sprintf("@%s", player.Username)
+	text := "<b>The Top 5 Players in This Chat</b>\n\n"
+	for i, p := range topPlayers {
+		n := ""
+		if p.Username != "" {
+			n = fmt.Sprintf("@%s", p.Username)
+		} else if p.FirstName != "" {
+			n = p.FirstName
+		} else {
+			n = strconv.FormatInt(p.ID, 16)
 		}
-		text += fmt.Sprintf("%d. %s - %d scores\n", i+1, name, player.Scores)
+		n = fmt.Sprintf("<a href=\"tg://user?id=%d\">%s</a>", p.ID, html.EscapeString(n))
+		s := "s"
+		if p.Scores == 1 {
+			s = ""
+		}
+		text += fmt.Sprintf("%d. %s - %d score%s\n", i+1, n, p.Scores, s)
 	}
-	text += "\nThis list updates every 10 minutes."
-	_, err = ctx.EffectiveMessage.Reply(b, text, nil)
+	text += "\n<i>Updates every 10 minutes.</i>"
+	_, err = ctx.EffectiveMessage.Reply(b, text, &gotgbot.SendMessageOpts{ParseMode: "HTML"})
 	return err
 }
 
@@ -42,8 +53,9 @@ func getTopPlayers(id int64) ([]session.TopPlayer, error) {
 	}
 	topPlayers = []session.TopPlayer{}
 	for _, score := range scores {
-		user, _ := db.UsersFind(score.ChatID)
+		user, _ := db.UsersFind(score.UserID)
 		topPlayers = append(topPlayers, session.TopPlayer{ID: score.UserID, Scores: score.Count, FirstName: user.FirstName, Username: user.Username})
 	}
+	session.TopPlayersSet(id, topPlayers)
 	return topPlayers, nil
 }
