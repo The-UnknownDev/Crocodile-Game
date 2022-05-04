@@ -11,7 +11,6 @@ type Chat struct {
 	Id       int64           `bson:"id"`
 	Title    int64           `bson:"title"`
 	Games    int64           `bson:"games"`
-	UserWins map[int64]int64 `bson:"user_wins"`
 }
 
 func chats() *mongo.Collection {

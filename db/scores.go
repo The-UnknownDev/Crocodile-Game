@@ -25,12 +25,3 @@ func ScoresUpdate(chatId int64, userId int64) error {
 	_, err := scores().UpdateOne(ctx, bson.D{{"chat_id", chatId}, {"user_id", userId}}, bson.D{{"$inc", bson.D{{"count", 1}}}}, options.Update().SetUpsert(true))
 	return err
 }
-
-func ScoresTop(chatId int64) ([]Score, error) {
-	cur, err := scores().Find(ctx, bson.D{{"chat_id", chatId}}, options.Find().SetSort(bson.D{{"count", -1}}).SetLimit(5))
-	if err != nil {
-		return nil, err
-	}
-	scores := []Score{}
-	return scores, cur.All(ctx, &scores)
-}

@@ -18,14 +18,9 @@ var commandTopPlayersHandler = handlers.NewCommand("top_players", commandTopPlay
 func commandTopPlayers(b *gotgbot.Bot, ctx *ext.Context) error {
 	topPlayers, err := session.TopPlayersGet(ctx.EffectiveChat.Id)
 	if err != nil {
-		scores, err := db.ScoresTop(ctx.EffectiveChat.Id)
+		topPlayers, err = db.TopPlayersInChat(ctx.EffectiveChat.Id)
 		if err != nil {
 			return err
-		}
-		topPlayers = []session.TopPlayer{}
-		for _, score := range scores {
-			user, _ := db.UsersFind(score.UserID)
-			topPlayers = append(topPlayers, session.TopPlayer{Id: score.UserID, Scores: score.Count, FirstName: user.FirstName, Username: user.Username})
 		}
 		if err = session.TopPlayersSet(ctx.EffectiveChat.Id, topPlayers); err != nil {
 			return err

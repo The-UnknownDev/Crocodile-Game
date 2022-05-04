@@ -1,6 +1,7 @@
 package session
 
 import (
+	"bot/db"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -8,18 +9,11 @@ import (
 
 const topPlayersDuration = 10 * time.Minute
 
-type TopPlayer struct {
-	Id        int64  `json:"id"`
-	Scores    int64  `json:"scores"`
-	FirstName string `json:"first_name"`
-	Username  string `json:"username"`
-}
-
 func topPlayersKey(id int64) string {
 	return fmt.Sprintf("topplayers_%d", id)
 }
 
-func TopPlayersSet(id int64, topPlayers []TopPlayer) error {
+func TopPlayersSet(id int64, topPlayers []db.TopPlayer) error {
 	key := topPlayersKey(id)
 	value, err := json.Marshal(topPlayers)
 	if err != nil {
@@ -29,12 +23,12 @@ func TopPlayersSet(id int64, topPlayers []TopPlayer) error {
 	return err
 }
 
-func TopPlayersGet(id int64) ([]TopPlayer, error) {
+func TopPlayersGet(id int64) ([]db.TopPlayer, error) {
 	key := topPlayersKey(id)
 	value, err := client.Get(client.Context(), key).Result()
 	if err != nil {
 		return nil, err
 	}
-	topPlayers := []TopPlayer{}
+	topPlayers := []db.TopPlayer{}
 	return topPlayers, json.Unmarshal([]byte(value), &topPlayers)
 }
