@@ -9,7 +9,7 @@ import (
 const topPlayersDuration = 10 * time.Minute
 
 type TopPlayer struct {
-	ID        int64  `json:"id"`
+	Id        int64  `json:"id"`
 	Scores    int64  `json:"scores"`
 	FirstName string `json:"first_name"`
 	Username  string `json:"username"`

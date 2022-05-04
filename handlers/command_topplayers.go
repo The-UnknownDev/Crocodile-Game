@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"html"
 	"strconv"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -11,6 +10,7 @@ import (
 
 	"bot/db"
 	"bot/session"
+	"bot/utils"
 )
 
 var commandTopPlayersHandler = handlers.NewCommand("top_players", commandTopPlayers)
@@ -28,9 +28,9 @@ func commandTopPlayers(b *gotgbot.Bot, ctx *ext.Context) error {
 		} else if p.FirstName != "" {
 			n = p.FirstName
 		} else {
-			n = strconv.FormatInt(p.ID, 16)
+			n = strconv.FormatInt(p.Id, 36)
 		}
-		n = fmt.Sprintf("<a href=\"tg://user?id=%d\">%s</a>", p.ID, html.EscapeString(n))
+		n = utils.Mention(p.Id, n)
 		s := "s"
 		if p.Scores == 1 {
 			s = ""
@@ -54,7 +54,7 @@ func getTopPlayers(id int64) ([]session.TopPlayer, error) {
 	topPlayers = []session.TopPlayer{}
 	for _, score := range scores {
 		user, _ := db.UsersFind(score.UserID)
-		topPlayers = append(topPlayers, session.TopPlayer{ID: score.UserID, Scores: score.Count, FirstName: user.FirstName, Username: user.Username})
+		topPlayers = append(topPlayers, session.TopPlayer{Id: score.UserID, Scores: score.Count, FirstName: user.FirstName, Username: user.Username})
 	}
 	session.TopPlayersSet(id, topPlayers)
 	return topPlayers, nil

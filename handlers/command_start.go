@@ -10,6 +10,7 @@ import (
 
 	"bot/db"
 	"bot/session"
+	"bot/utils"
 	"bot/wordlist"
 )
 
@@ -28,8 +29,9 @@ func commandStart(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 	_, err := ctx.EffectiveMessage.Reply(
 		b,
-		fmt.Sprintf("%s talks about a word", ctx.EffectiveUser.FirstName),
+		fmt.Sprintf("%s talks about a word.", utils.Mention(ctx.EffectiveUser.Id, ctx.EffectiveUser.FirstName)),
 		&gotgbot.SendMessageOpts{
+			ParseMode:   "HTML",
 			ReplyMarkup: new(keyboard.InlineKeyboard).Text("View word", "view").Row().Text("Previous word", "prev").Text("Next word", "next").Build(),
 		},
 	)
