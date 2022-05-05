@@ -28,7 +28,3 @@ func UsersUpdate(user *gotgbot.User) error {
 	return err
 }
 
-func UsersFind(id int64) (*User, error) {
-	user := &User{}
-	return user, users().FindOne(ctx, bson.D{{"id", id}}).Decode(user)
-}
