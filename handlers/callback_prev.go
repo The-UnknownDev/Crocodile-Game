@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
@@ -17,7 +19,9 @@ var callbackPrevHandler = handlers.NewCallback(
 )
 
 func callbackPrev(b *gotgbot.Bot, ctx *ext.Context) error {
-	game, err := session.GameGet(ctx.EffectiveChat.Id)
+	game := session.Game{}
+	key := fmt.Sprintf("game_%d", ctx.EffectiveChat.Id)
+	err := session.Get(key, &game)
 	if err != nil {
 		return err
 	}
@@ -25,7 +29,7 @@ func callbackPrev(b *gotgbot.Bot, ctx *ext.Context) error {
 		_, err = ctx.CallbackQuery.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: "This is not for you."})
 	} else {
 		game.Word = wordlist.Prev(game.Word)
-		if err = session.GameSet(ctx.EffectiveChat.Id, game); err != nil {
+		if err = session.Set(key, game, session.GameDuration); err != nil {
 			return err
 		}
 		_, err = ctx.CallbackQuery.Answer(b, &gotgbot.AnswerCallbackQueryOpts{Text: wordlist.Get(game.Word)})

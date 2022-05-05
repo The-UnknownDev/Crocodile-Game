@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
@@ -17,7 +19,8 @@ var callbackViewHandler = handlers.NewCallback(
 )
 
 func callbackView(b *gotgbot.Bot, ctx *ext.Context) error {
-	game, err := session.GameGet(ctx.EffectiveChat.Id)
+	game := session.Game{}
+	err := session.Get(fmt.Sprintf("game_%d", ctx.EffectiveChat.Id), &game)
 	if err != nil {
 		return err
 	}

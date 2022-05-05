@@ -17,11 +17,12 @@ import (
 var commandStartHandler = handlers.NewCommand("start", commandStart)
 
 func commandStart(b *gotgbot.Bot, ctx *ext.Context) error {
-	if _, err := session.GameGet(ctx.EffectiveChat.Id); err == nil {
+	key := fmt.Sprintf("game_%d", ctx.EffectiveChat.Id)
+	if err := session.Get(key, &struct{}{}); err == nil {
 		_, err = ctx.EffectiveMessage.Reply(b, "A game is already in progress.", nil)
 		return err
 	}
-	if err := session.GameSet(ctx.EffectiveChat.Id, &session.Game{Host: ctx.EffectiveUser.Id, Word: wordlist.Rand()}); err != nil {
+	if err := session.Set(key, &session.Game{Host: ctx.EffectiveUser.Id, Word: wordlist.Rand()}, session.GameDuration); err != nil {
 		return err
 	}
 	if err := db.ChatsUpdate(ctx.EffectiveChat); err != nil {

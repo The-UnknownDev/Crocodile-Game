@@ -21,7 +21,9 @@ var messageHandler = handlers.NewMessage(
 )
 
 func message(b *gotgbot.Bot, ctx *ext.Context) error {
-	game, err := session.GameGet(ctx.EffectiveChat.Id)
+	game := session.Game{}
+	key := fmt.Sprintf("game_%d", ctx.EffectiveChat.Id)
+	err := session.Get(key, &game)
 	if err != nil {
 		return err
 	}
@@ -29,7 +31,7 @@ func message(b *gotgbot.Bot, ctx *ext.Context) error {
 		return err
 	}
 	if strings.Contains(strings.ToLower(ctx.EffectiveMessage.Text), wordlist.Get(game.Word)) {
-		if err = session.GameDel(ctx.EffectiveChat.Id); err != nil {
+		if err = session.Del(key); err != nil {
 			return err
 		}
 		if err = db.UsersUpdate(ctx.EffectiveUser); err != nil {

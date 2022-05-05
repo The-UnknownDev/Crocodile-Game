@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -16,13 +17,15 @@ import (
 var commandTopPlayersHandler = handlers.NewCommand("top_players", commandTopPlayers)
 
 func commandTopPlayers(b *gotgbot.Bot, ctx *ext.Context) error {
-	topPlayers, err := session.TopPlayersGet(ctx.EffectiveChat.Id)
+	topPlayers := []db.TopPlayer{}
+	key := fmt.Sprintf("topplayers_%d", ctx.EffectiveChat.Id)
+	err := session.Get(key, &topPlayers)
 	if err != nil {
 		topPlayers, err = db.TopPlayersInChat(ctx.EffectiveChat.Id)
 		if err != nil {
 			return err
 		}
-		if err = session.TopPlayersSet(ctx.EffectiveChat.Id, topPlayers); err != nil {
+		if err = session.Set(key, topPlayers, 10*time.Minute); err != nil {
 			return err
 		}
 	}
