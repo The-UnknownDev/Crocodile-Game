@@ -2,6 +2,9 @@ package session
 
 import (
 	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -19,7 +22,21 @@ func Initialize() error {
 }
 
 func Poll(bot *gotgbot.Bot) {
-	gamePoll(bot)
+	ch := client.Subscribe(client.Context(), fmt.Sprintf("__keyevent@%d__:expired", config.C.Redis.Database)).Channel()
+	go func() {
+		message := <-ch
+		go func() {
+			slices := strings.Split(message.Payload, "_")
+			if slices[0] != "game" {
+				return
+			}
+			id, err := strconv.ParseInt(slices[1], 10, 64)
+			if err != nil {
+				return
+			}
+			bot.SendMessage(id, "Time is up!", nil)
+		}()
+	}()
 }
 
 func Set(key string, v interface{}, expiration time.Duration) error {
