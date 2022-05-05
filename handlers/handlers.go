@@ -37,4 +37,8 @@ func Load(dp *ext.Dispatcher) {
 	dp.AddHandlerToGroup(commandStartHandler, 1)
 	dp.AddHandlerToGroup(commandTopPlayersHandler, 1)
 	dp.AddHandlerToGroup(messageHandler, 1)
+	dp.Error = func(b *gotgbot.Bot, ctx *ext.Context, err error) ext.DispatcherAction {
+		dp.ErrorLog.Println(err)
+		return ext.DispatcherActionNoop
+	}
 }
