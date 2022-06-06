@@ -10,28 +10,32 @@
 
   "env": {
 
-    "BOT_TOKEN": {
+  "Mongo": {
 
-      "description": "A bot token from @BotFather.",
+    "Uri": "mongodb://127.0.0.1",
 
-      "required": true
-
-    },
-
-    "MONGO_URI": {
-
-      "description": "A MongoDB URI.",
-
-      "required": true
-
-    }
+    "Database": "crocodile"
 
   },
 
-  "
+  "Redis": {
 
-    }
+    "Address": ":6379",
 
-  ]
+    "Username": "",
+
+    "Password": "",
+
+    "Database": 0
+
+  },
+
+  "Telegram": {
+
+    "BotToken": ""
+
+  },
 
 }
+
+    
